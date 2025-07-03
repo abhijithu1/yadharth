@@ -20,6 +20,19 @@ export default function EventFormPage() {
     type_of_event: '',
   });
 
+  const isFormValid =
+    formData.type_of_event &&
+    formData.event_name &&
+    formData.start_date &&
+    formData.end_date &&
+    (!formData.start_date || !formData.end_date || formData.end_date >= formData.start_date);
+
+  const isEndDateInvalid =
+    formData.start_date &&
+    formData.end_date &&
+    formData.end_date < formData.start_date;
+
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -96,9 +109,10 @@ export default function EventFormPage() {
             required
           >
             <option value="">Select Type</option>
-            <option value="Conference">Conference</option>
-            <option value="Workshop">Workshop</option>
-            <option value="Meetup">Meetup</option>
+            <option value="Conference">🎤 Conference</option>
+            <option value="Workshop">🛠️ Workshop</option>
+            <option value="Internship">💼 Internship</option>
+            <option value="Hackathon">💻 Hackathon</option>
           </select>
         </div>
 
@@ -123,6 +137,7 @@ export default function EventFormPage() {
             onChange={handleChange}
             className="w-full bg-gray-700 border border-gray-600 p-2 rounded text-white"
             required
+            autoComplete="off"
           />
         </div>
 
@@ -147,7 +162,11 @@ export default function EventFormPage() {
             onChange={handleChange}
             className="w-full bg-gray-700 border border-gray-600 p-2 rounded text-white"
             required
+            min={formData.start_date || undefined}
           />
+          {isEndDateInvalid && (
+            <p className="text-red-400 text-sm mt-1">⚠ End date cannot be before start date.</p>
+          )}
         </div>
 
         <button 
@@ -157,7 +176,7 @@ export default function EventFormPage() {
               ? 'bg-gray-500 cursor-not-allowed' 
               : 'bg-blue-600 hover:bg-blue-700'
           }`}
-          disabled={loading}
+          disabled={loading || !isFormValid}
         >
           {loading ? 'Creating Event...' : 'Submit'}
         </button>
