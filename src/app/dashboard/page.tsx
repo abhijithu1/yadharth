@@ -1,20 +1,20 @@
-'use client';
-
+"use client";
 import React from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
-  return (
-    <main className="min-h-screen bg-gray-900 text-white p-8">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <p className="mb-6">Welcome! Here you can manage your events.</p>
+  const router = useRouter();
 
-      <Link
-        href="/event-form"
-        className="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+  return (
+    <main className="p-8">
+      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <p>Welcome! Here you can manage your events. (Event list coming soon.)</p>
+      <button
+        className="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        onClick={() => router.push("/event-form")}
       >
-        + Create New Event
-      </Link>
+        Create New Event
+      </button>
     </main>
   );
 }
