@@ -1,8 +1,14 @@
+"use client";
+import SyncUserToSupabase from "./syncutosupabase";
 import Image from "next/image";
+import { useUser } from '@clerk/nextjs';
 
 export default function Home() {
+  const { user, isLoaded } = useUser();
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <SyncUserToSupabase />
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <Image
           className="dark:invert"
@@ -98,6 +104,17 @@ export default function Home() {
           Go to nextjs.org →
         </a>
       </footer>
+      <div className="mb-4">
+        {isLoaded && user ? (
+          <div className="p-4 bg-gray-100 rounded text-sm text-black dark:bg-gray-800 dark:text-white">
+            <div><strong>First Name:</strong> {user.firstName || 'N/A'}</div>
+            <div><strong>Email:</strong> {user.primaryEmailAddress?.emailAddress || (user.emailAddresses[0]?.emailAddress ?? 'N/A')}</div>
+            <div><strong>Clerk User ID:</strong> {user.id}</div>
+          </div>
+        ) : (
+          <div className="p-4 bg-gray-100 rounded text-sm text-black dark:bg-gray-800 dark:text-white">Sign in to see your user info.</div>
+        )}
+      </div>
     </div>
   );
 }
