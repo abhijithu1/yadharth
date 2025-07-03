@@ -10,6 +10,12 @@ export default function EventFormPage() {
     endDate: '',
   });
 
+  const isFormValid =
+    formData.eventType &&
+    formData.eventName &&
+    formData.startDate &&
+    formData.endDate;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -37,7 +43,8 @@ export default function EventFormPage() {
             <option value="">Select Type</option>
             <option value="Conference">Conference</option>
             <option value="Workshop">Workshop</option>
-            <option value="Meetup">Meetup</option>
+            <option value="Internship">Internship</option>
+            <option value="Hackathon">Hackathon</option>
           </select>
         </div>
 
@@ -77,7 +84,11 @@ export default function EventFormPage() {
           />
         </div>
 
-        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={!isFormValid}
+        >
           Submit
         </button>
       </form>
