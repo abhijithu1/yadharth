@@ -1,8 +1,9 @@
 export default async function CertificateVerificationPage({
     params,
   }: {
-    params: { certificate_id: string };
+    params: Promise<{ certificate_id: string }>;
   }) {
+    const resolvedParams = await params;
     // 🔁 Simulated certificate data (you can replace with real fetch logic later)
     const mockData = {
       participant_name: 'Kishan P K',
