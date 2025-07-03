@@ -1,13 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from '@supabase/supabase-js';
 import { useAuth, useUser } from "@clerk/nextjs";
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from "@/utils/supabaseClient";
 
 interface Event {
   id: string;
@@ -27,7 +22,6 @@ export default function DashboardPage() {
   const fetchEvents = async () => {
     setLoading(true);
     try {
-      // Use the user's email from Clerk to fetch events
       
   const email = user?.primaryEmailAddress?.emailAddress || user?.emailAddresses[0]?.emailAddress || "";
       
@@ -52,7 +46,6 @@ export default function DashboardPage() {
     }
   };
   
-  // Fetch events when the component mounts or user changes
   useEffect(() => {
     if (isLoaded) {
       fetchEvents();
@@ -61,7 +54,6 @@ export default function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-8">
-      {/* Header Section */}
       <div className="max-w-6xl mx-auto">
         <div className="mb-8 flex items-center justify-between">
           <div>
@@ -79,7 +71,6 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between">
