@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export default function EventFormPage() {
   const { userId, sessionId, getToken } = useAuth();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -45,15 +47,7 @@ export default function EventFormPage() {
       
       console.log('Event created:', data);
       setSuccess(true);
-      // Reset form after successful submission
-      setFormData({
-        email: '',
-        event_name: '',
-        org_name: '',
-        start_date: '',
-        end_date: '',
-        type_of_event: '',
-      });
+      router.push("/dashboard");
       
     } catch (err: any) {
       console.error('Error creating event:', err);
