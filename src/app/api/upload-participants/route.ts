@@ -114,7 +114,8 @@ export async function POST(req: NextRequest) {
     console.log(`Successfully inserted ${insertedParticipants.length} participants`);
 
     // 6. Generate verification URLs
-    const baseUrl = "http://localhost:3001";
+    // Use environment variable or fallback to localhost
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
     const participantUrls = [];
     
     // Prepare data for updating the database
@@ -131,6 +132,7 @@ export async function POST(req: NextRequest) {
       });
       
       // Queue update for this participant to save the URL
+      // Note: Make sure your registrations table has a verification_url column
       updatePromises.push(
         supabase
           .from('registrations')
@@ -140,8 +142,13 @@ export async function POST(req: NextRequest) {
     }
 
     // Update all participants with their verification URLs
-    await Promise.all(updatePromises);
-    console.log("Updated all participants with verification URLs");
+    try {
+      await Promise.all(updatePromises);
+      console.log("Updated all participants with verification URLs");
+    } catch (updateError) {
+      console.warn("Warning: Could not update verification URLs:", updateError);
+      // Continue with QR code generation even if URL update fails
+    }
 
     // 7. Create ZIP file with QR code PNG files
     const zip = new JSZip();
@@ -166,7 +173,7 @@ export async function POST(req: NextRequest) {
         return { success: true, name: participant.name, filename };
       } catch (error) {
         console.error(`Failed to generate QR code for ${participant.name}:`, error);
-        return { success: false, name: participant.name, error: error.message };
+        return { success: false, name: participant.name, error: error instanceof Error ? error.message : 'Unknown error' };
       }
     });
     
