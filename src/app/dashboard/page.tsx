@@ -153,7 +153,11 @@ export default function DashboardPage() {
             ) : events.length > 0 ? (
               <div className="space-y-4">
                 {events.slice(0, 5).map((event) => (
-                  <div key={event.id} className="p-4 rounded-lg border border-gray-700 hover:border-blue-500 transition-colors duration-200">
+                  <div
+                    key={event.id}
+                    className="p-4 rounded-lg border border-gray-700 hover:border-blue-500 transition-colors duration-200 cursor-pointer"
+                    onClick={() => router.push(`/events/${event.id}/upload`)}
+                  >
                     <div className="flex justify-between items-start">
                       <h3 className="font-medium text-white">{event.event_name}</h3>
                       <span className="px-2 py-1 text-xs rounded-full bg-gray-700 text-gray-300">
@@ -167,7 +171,10 @@ export default function DashboardPage() {
                       </span>
                       <button 
                         className="text-blue-400 hover:text-blue-300"
-                        onClick={() => router.push(`/events/${event.id}`)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/events/${event.id}`);
+                        }}
                       >
                         Details
                       </button>

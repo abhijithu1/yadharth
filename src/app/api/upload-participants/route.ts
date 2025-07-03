@@ -29,18 +29,19 @@ export async function POST(req: NextRequest) {
     const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
     // 4. Extract name and phone, and insert into Supabase
-    const participants = jsonData.map((row: any) => ({
+    const registrations = jsonData.map((row: any) => ({
       name: row.name,
       phone: row.phone,
+      email: row.email,
     }));
 
     // Insert into Supabase (adjust table/column names as needed)
-    const { error } = await supabase.from('participants').insert(participants);
+    const { error } = await supabase.from('registrations').insert(registrations);
     if (error) {
       return new NextResponse('Database insert error', { status: 500 });
     }
 
-    return NextResponse.json({ success: true, count: participants.length });
+    return NextResponse.json({ success: true, count: registrations.length });
   } catch (err) {
     console.error(err);
     return new NextResponse('Internal server error', { status: 500 });
