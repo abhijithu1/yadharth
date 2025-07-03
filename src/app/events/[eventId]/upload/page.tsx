@@ -2,12 +2,18 @@
 
 import React, { useRef, useState } from "react";
 import { CloudArrowUpIcon } from '@heroicons/react/24/outline';
+import { useParams } from 'next/navigation';
 
-export default function UploadParticipantsPage({ params }: { params: { eventId: string } }) {
+export default function UploadParticipantsPage() {
+  // Use the useParams hook to get the params
+  const params = useParams();
+  const eventId = params.eventId as string;
+  
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,6 +21,7 @@ export default function UploadParticipantsPage({ params }: { params: { eventId: 
       setFile(e.target.files[0]);
       setSuccess(false);
       setError(null);
+      setDownloadUrl(null);
     }
   };
 
@@ -24,22 +31,41 @@ export default function UploadParticipantsPage({ params }: { params: { eventId: 
     setUploading(true);
     setSuccess(false);
     setError(null);
+    setDownloadUrl(null);
+    
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("eventId", params.eventId);
+      formData.append("eventId", eventId);
+      
       const res = await fetch("/api/upload-participants", {
         method: "POST",
         body: formData,
       });
+      
       if (!res.ok) {
         const errText = await res.text();
         throw new Error(errText || "Upload failed");
       }
+      
+      // Handle the ZIP file download
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      setDownloadUrl(url);
+      
+      // Automatically trigger download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `participants-verification-${eventId}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
       setSuccess(true);
       setFile(null);
       if (inputRef.current) inputRef.current.value = "";
     } catch (err: any) {
+      console.error("Upload error:", err);
       setError(err.message || "Upload failed");
     } finally {
       setUploading(false);
@@ -54,7 +80,7 @@ export default function UploadParticipantsPage({ params }: { params: { eventId: 
             <CloudArrowUpIcon className="h-10 w-10 text-white" />
           </div>
           <h1 className="text-3xl font-extrabold text-white mb-2 text-center drop-shadow-lg">Upload Participants</h1>
-          <p className="text-lg text-blue-100 mb-1 text-center">Event ID: <span className="font-mono text-blue-200">{params.eventId}</span></p>
+          <p className="text-lg text-blue-100 mb-1 text-center">Event ID: <span className="font-mono text-blue-200">{eventId}</span></p>
           <p className="text-sm text-purple-200 text-center">Upload your Excel file (.xlsx or .xls) with participant details.</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -85,9 +111,29 @@ export default function UploadParticipantsPage({ params }: { params: { eventId: 
             ) : "Upload Excel File"}
           </button>
         </form>
-        {success && <div className="mt-6 text-center text-green-400 font-semibold bg-green-900/30 rounded-lg py-2 px-4 shadow">File uploaded and processed successfully!</div>}
+        {success && (
+          <div className="mt-6 space-y-4">
+            <div className="text-center text-green-400 font-semibold bg-green-900/30 rounded-lg py-2 px-4 shadow">
+              File uploaded and processed successfully!
+            </div>
+            {downloadUrl && (
+              <div className="text-center">
+                <a 
+                  href={downloadUrl}
+                  download={`participants-verification-${eventId}.zip`}
+                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                >
+                  Download Verification Files
+                </a>
+                <p className="text-xs text-blue-200 mt-2">
+                  If the download didn't start automatically, click the button above.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
         {error && <div className="mt-6 text-center text-red-400 font-semibold bg-red-900/30 rounded-lg py-2 px-4 shadow">{error}</div>}
       </div>
     </main>
   );
-} 
+}
