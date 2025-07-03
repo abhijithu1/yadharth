@@ -10,9 +10,9 @@ This document outlines an exhaustive, step-by-step plan for implementing bulk QR
   - [ ] Define the user flow for triggering QR code generation (e.g., button in event dashboard).
   - [ ] Specify the URL format for each participant's certificate (e.g., `https://www.mydomain.xyz/{customer_id}/{event_id}/{participant_id}`).
 
-- [ ] **Set Up Required Libraries**
-  - [ ] Add a QR code generation library (e.g., `qrcode`).
-  - [ ] Add a ZIP file creation library (e.g., `jszip`).
+- [x] **Set Up Required Libraries**
+  - [x] Add a QR code generation library (e.g., `qrcode`).
+  - [x] Add a ZIP file creation library (e.g., `jszip`).
 
 - [ ] **Create Server Action or API Route**
   - [ ] Implement a server action or API route (e.g., `/api/generate-qrcodes`).
