@@ -14,8 +14,12 @@ export async function POST(req: NextRequest) {
     // 1. Parse the incoming form data
     const formData = await req.formData();
     const file = formData.get('file') as File;
+    const event_id = formData.get('eventId') as string;
     if (!file) {
       return new NextResponse('No file uploaded', { status: 400 });
+    }
+    if (!event_id) {
+      return new NextResponse('No event_id provided', { status: 400 });
     }
 
     // 2. Read file buffer
@@ -28,11 +32,24 @@ export async function POST(req: NextRequest) {
     const worksheet = workbook.Sheets[sheetName];
     const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-    // 4. Extract name and phone, and insert into Supabase
+    // 4. Get customer_id from events table
+    const { data: eventData, error: eventError } = await supabase
+      .from('events')
+      .select('customer_id')
+      .eq('id', event_id)
+      .single();
+    if (eventError || !eventData) {
+      return new NextResponse('Event not found or error fetching event', { status: 404 });
+    }
+    const customer_id = eventData.customer_id;
+
+    // 5. Extract name, phone, email, and add customer_id and event_id
     const registrations = jsonData.map((row: any) => ({
       name: row.name,
       phone: row.phone,
       email: row.email,
+      customer_id,
+      event_id,
     }));
 
     // Insert into Supabase (adjust table/column names as needed)
