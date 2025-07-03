@@ -1,5 +1,5 @@
 "use client";
-import SyncUserToSupabase from "./SyncUserToSupabase.tsx";
+import SyncUserToSupabase from "./syncutosupabase";
 import Image from "next/image";
 import { useUser } from '@clerk/nextjs';
 
