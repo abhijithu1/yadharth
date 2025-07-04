@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth, useUser, UserButton } from "@clerk/nextjs";
 import { supabase } from "@/utils/supabaseClient";
 import { motion, Variants } from "framer-motion"; // Import Variants type
 import { Dialog } from '@headlessui/react';
@@ -140,6 +140,10 @@ export default function DashboardPage() {
       animate={{ opacity: 1 }}
       className="min-h-screen bg-white px-4 py-8 md:px-8"
     >
+      {/* Top bar with UserButton */}
+      <div className="flex justify-end items-center mb-4">
+        <UserButton afterSignOutUrl="/" />
+      </div>
       <div className="max-w-6xl mx-auto">
         <motion.div 
           variants={containerVariants}
