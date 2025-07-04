@@ -156,7 +156,6 @@ export default async function VerificationPage({
 
           {/* Celebratory message */}
           <div className="flex flex-col items-center mt-6 animate-in fade-in-50 delay-700">
-            <span className="text-green-600 font-bold text-lg">🎉 Congratulations! 🎉</span>
             <span className="text-gray-500 text-xs mt-1">This certificate is valid and recognized.</span>
           </div>
         </div>
