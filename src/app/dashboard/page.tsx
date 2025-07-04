@@ -232,8 +232,7 @@ export default function DashboardPage() {
                     key={event.id}
                     variants={itemVariants}
                     whileHover={{ scale: 1.02 }}
-                    className="p-4 rounded-lg border border-gray-200 hover:border-gray-400 transition-colors duration-200 cursor-pointer bg-white shadow-sm hover:shadow"
-                    onClick={() => router.push(`/events/${event.id}`)}
+                    className="p-4 rounded-lg border border-gray-200 hover:border-gray-400 transition-colors duration-200 bg-white shadow-sm hover:shadow"
                   >
                     <div className="flex justify-between items-start">
                       <h3 className="font-medium text-black">{event.event_name}</h3>
