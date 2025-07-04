@@ -10,7 +10,9 @@ import {
 
 export default function Header() {
   const pathname = usePathname();
-  if (pathname.startsWith("/verify/")) return null;
+  if (pathname.startsWith("/verify/") ||
+  pathname.startsWith("/sign-in") ||
+  pathname.startsWith("/sign-up") || pathname.startsWith("/")) return null;
   return (
     <header className="flex justify-end items-center p-4 gap-4 h-16">
       <SignedOut>
