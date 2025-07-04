@@ -35,7 +35,7 @@ export default function RootLayout({
     <ClerkProvider afterSignInUrl="/dashboard" afterSignUpUrl="/dashboard">
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white`}>
-          <ClientAuthRedirect />
+         
           <header className="flex justify-end items-center p-4 gap-4 h-16">
             <SignedOut>
               <SignInButton />

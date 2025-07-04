@@ -12,6 +12,7 @@
     "@clerk/nextjs": "^6.23.2",
     "@heroicons/react": "^2.2.0",
     "@supabase/supabase-js": "^2.50.3",
+    "framer-motion": "^12.23.0",
     "jszip": "^3.10.1",
     "next": "15.3.4",
     "qrcode": "^1.5.4",
