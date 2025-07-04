@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { supabase } from "@/utils/supabaseClient";
 import { motion, Variants } from "framer-motion"; // Import Variants type
+import { Dialog } from '@headlessui/react';
 
 interface Event {
   id: string;
@@ -43,6 +44,11 @@ export default function DashboardPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const { user, isLoaded } = useUser();
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [eventToEdit, setEventToEdit] = useState<Event | null>(null);
+  const [editForm, setEditForm] = useState<Partial<Event>>({});
+  const [editLoading, setEditLoading] = useState(false);
+  const [deleteLoadingId, setDeleteLoadingId] = useState<string | null>(null);
   
   // Function to fetch events
   const fetchEvents = async () => {
@@ -76,6 +82,57 @@ export default function DashboardPage() {
       fetchEvents();
     }
   }, [isLoaded, user]);
+
+  const handleDelete = async (id: string) => {
+    setDeleteLoadingId(id);
+    try {
+      const res = await fetch(`/api/Event/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setEvents(events => events.filter(e => e.id !== id));
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Failed to delete event');
+      }
+    } catch (err) {
+      alert('Failed to delete event');
+    } finally {
+      setDeleteLoadingId(null);
+    }
+  };
+
+  const openEditModal = (event: Event) => {
+    setEventToEdit(event);
+    setEditForm(event);
+    setEditModalOpen(true);
+  };
+
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!eventToEdit) return;
+    setEditLoading(true);
+    try {
+      const res = await fetch(`/api/Event/${eventToEdit.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setEvents(events => events.map(ev => ev.id === eventToEdit.id ? { ...ev, ...data.event } : ev));
+        setEditModalOpen(false);
+      } else {
+        alert(data.error || 'Failed to update event');
+      }
+    } catch (err) {
+      alert('Failed to update event');
+    } finally {
+      setEditLoading(false);
+    }
+  };
 
   return (
     <motion.main 
@@ -209,13 +266,25 @@ export default function DashboardPage() {
                         <motion.button 
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          className="text-black hover:text-gray-700 font-medium"
-                          onClick={(e) => {
+                          className="text-yellow-600 hover:text-yellow-800 font-medium"
+                          onClick={e => {
                             e.stopPropagation();
-                            router.push(`/events/${event.id}`);
+                            openEditModal(event);
                           }}
                         >
-                          Details
+                          Edit
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="text-red-600 hover:text-red-800 font-medium"
+                          disabled={deleteLoadingId === event.id}
+                          onClick={e => {
+                            e.stopPropagation();
+                            if (confirm('Are you sure you want to delete this event?')) handleDelete(event.id);
+                          }}
+                        >
+                          {deleteLoadingId === event.id ? 'Deleting...' : 'Delete'}
                         </motion.button>
                       </div>
                     </div>
@@ -269,6 +338,93 @@ export default function DashboardPage() {
             </motion.button>
           </div>
         </motion.div>
+
+        {/* Edit Modal */}
+        <Dialog open={editModalOpen} onClose={() => setEditModalOpen(false)} className="fixed z-50 inset-0 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen px-4">
+            <div className="fixed inset-0 bg-black opacity-30" aria-hidden="true" />
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-auto p-6 z-10"
+            >
+              <Dialog.Title className="text-lg font-bold mb-4">Edit Event</Dialog.Title>
+              <form onSubmit={handleEditSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Event Name</label>
+                  <input
+                    type="text"
+                    name="event_name"
+                    value={editForm.event_name || ''}
+                    onChange={handleEditChange}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-black"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Organization Name</label>
+                  <input
+                    type="text"
+                    name="org_name"
+                    value={editForm.org_name || ''}
+                    onChange={handleEditChange}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-black"
+                    required
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                    <input
+                      type="date"
+                      name="start_date"
+                      value={editForm.start_date || ''}
+                      onChange={handleEditChange}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-black"
+                      required
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                    <input
+                      type="date"
+                      name="end_date"
+                      value={editForm.end_date || ''}
+                      onChange={handleEditChange}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-black"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
+                  <select
+                    name="type_of_event"
+                    value={editForm.type_of_event || ''}
+                    onChange={handleEditChange}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-black"
+                    required
+                  >
+                    <option value="">Select Type</option>
+                    <option value="Conference">Conference</option>
+                    <option value="Workshop">Workshop</option>
+                    <option value="Internship">Internship</option>
+                    <option value="Hackathon">Hackathon</option>
+                  </select>
+                </div>
+                <div className="flex justify-end gap-2 mt-4">
+                  <button type="button" className="px-4 py-2 rounded bg-gray-200 text-black" onClick={() => setEditModalOpen(false)}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="px-4 py-2 rounded bg-black text-white" disabled={editLoading}>
+                    {editLoading ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        </Dialog>
       </div>
     </motion.main>
   );
