@@ -191,7 +191,7 @@ export default function Home() {
               >
                 <div className="p-2 bg-gray-100 rounded-xl">
                   <Image
-                    src="/certificate-example.png" 
+                    src="/certificate.jpg" 
                     alt="Certificate Example"
                     width={600}
                     height={400}
