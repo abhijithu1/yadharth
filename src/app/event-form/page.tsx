@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { motion, Variants } from "framer-motion"; // Added Variants type import
 
@@ -31,13 +31,13 @@ const itemVariants: Variants = {
 
 export default function EventFormPage() {
   const { userId, sessionId, getToken } = useAuth();
+  const { user, isLoaded } = useUser();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   
   const [formData, setFormData] = useState({
-    email: '',
     event_name: '',
     org_name: '',
     start_date: '',
@@ -69,12 +69,19 @@ export default function EventFormPage() {
     setSuccess(false);
 
     try {
+      // Get the current user's email
+      const email = user?.primaryEmailAddress?.emailAddress || user?.emailAddresses[0]?.emailAddress || "";
+      if (!email) {
+        setError('No email found for current user.');
+        setLoading(false);
+        return;
+      }
       const response = await fetch('/api/Event', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, email }),
       });
 
       const data = await response.json();
@@ -179,19 +186,6 @@ export default function EventFormPage() {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <motion.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Your Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full text-black bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors"
-                  placeholder="email@example.com"
-                  required
-                />
-              </motion.div>
-
               <motion.div variants={itemVariants}>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
                 <select
