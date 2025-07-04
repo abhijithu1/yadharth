@@ -1,3 +1,4 @@
+"use client";
 import { motion } from 'framer-motion';
 
 export default async function EventDetailsPage({ params }: { params: Promise<{ eventId: string }> }) {
