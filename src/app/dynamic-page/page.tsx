@@ -1,13 +1,16 @@
 "use client";
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { use } from 'react';
 
-export default async function CertificateVerificationPage({
+export default function CertificateVerificationPage({
     params,
   }: {
     params: Promise<{ certificate_id: string }>;
   }) {
-    const resolvedParams = await params;
+    // Resolve the params promise
+    const resolvedParams = use(params);
+    
     // 🔁 Simulated certificate data (you can replace with real fetch logic later)
     const mockData = {
       participant_name: 'Kishan P K',
@@ -142,7 +145,6 @@ export default async function CertificateVerificationPage({
             © Certificate Verification Platform
           </div>
         </motion.div>
-      </div>
+        </div>
     );
   }
-  
