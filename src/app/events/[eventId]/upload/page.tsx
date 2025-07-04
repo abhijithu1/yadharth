@@ -159,6 +159,44 @@ export default function UploadParticipantsPage() {
           Add participants to your event by uploading an Excel file
         </motion.p>
 
+        {/* Step 1: Template Info (highlighted) */}
+        <motion.div variants={itemVariants} className="mb-8">
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-5 flex items-start gap-4 shadow-sm">
+            <div className="pt-1">
+              <svg className="w-7 h-7 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-bold text-yellow-800 uppercase tracking-wide text-sm">Step 1:</span>
+                <span className="font-semibold text-yellow-900">Review Template</span>
+              </div>
+              <p className="text-gray-800 mb-2">
+                Make sure your Excel file follows the required format before uploading. This helps us process your participants correctly!
+              </p>
+              <div className="flex flex-wrap gap-3 mt-2">
+                <button 
+                  onClick={() => setShowTemplateModal(true)}
+                  className="text-yellow-900 font-semibold underline underline-offset-2 hover:text-yellow-700 transition-colors"
+                >
+                  View template
+                </button>
+                <button
+                  onClick={handleDownloadTemplate}
+                  className="text-yellow-900 font-semibold underline underline-offset-2 flex items-center hover:text-yellow-700 transition-colors"
+                >
+                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Download template
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Step 2: Upload Form */}
         <motion.div
           variants={itemVariants}
           className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sm:p-8 mb-6"
@@ -292,27 +330,6 @@ export default function UploadParticipantsPage() {
             <p className="text-gray-700">{error}</p>
           </motion.div>
         )}
-
-        <motion.div variants={itemVariants} className="text-center text-sm text-gray-500">
-          <p>Make sure your Excel file follows the required format.</p>
-          <div className="flex justify-center mt-2 gap-3">
-            <button 
-              onClick={() => setShowTemplateModal(true)}
-              className="text-black font-medium hover:underline"
-            >
-              View template
-            </button>
-            <button
-              onClick={handleDownloadTemplate}
-              className="text-black font-medium hover:underline flex items-center"
-            >
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              Download template
-            </button>
-          </div>
-        </motion.div>
       </motion.div>
 
       {/* Template Modal */}
