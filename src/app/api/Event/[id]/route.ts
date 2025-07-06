@@ -54,7 +54,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   
   // Add validation for theme_option
   if (updateData.theme_option !== undefined) {
-    const validThemes = ["classic", "modern", "corporate"];
+    const validThemes = ["classic", "modern", "corporate","elegant","fun"];
     if (!validThemes.includes(updateData.theme_option)) {
       return NextResponse.json({ 
         error: "Invalid theme_option. Must be one of: classic, modern, corporate" 

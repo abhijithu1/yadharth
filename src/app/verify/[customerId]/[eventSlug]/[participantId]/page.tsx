@@ -151,6 +151,250 @@ async function getParticipantData(participantId: string) {
   }
 }
 
+// --- Classic Template ---
+function ClassicTemplate({ participant, event, customer }: any) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-white py-12 px-4 font-serif">
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-xl max-w-2xl w-full p-10 relative">
+        {/* Blue Seal */}
+        <div className="absolute -top-16 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
+          <div className="bg-blue-500 rounded-full p-4 shadow-lg border-4 border-white">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="26" fill="#3b82f6" stroke="#2563eb" strokeWidth="6" /><path d="M20 32l7 7 13-15" stroke="#fff" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </div>
+          <span className="mt-2 text-blue-800 font-extrabold text-lg tracking-wide uppercase drop-shadow">VERIFIED</span>
+        </div>
+        <div className="pt-16 pb-2 flex flex-col items-center">
+          <h1 className="text-3xl font-extrabold mb-2 text-blue-900">Certificate of Completion</h1>
+          <div className="border-b-2 border-gray-200 w-24 mb-6"></div>
+          <p className="text-lg mb-2 text-gray-800 font-semibold">This is to certify that</p>
+          <div className="text-2xl font-extrabold text-blue-900 mb-2">{participant.name}</div>
+          <p className="mb-2 text-gray-800 font-semibold">has successfully completed</p>
+          <div className="text-xl font-bold text-blue-900 mb-2">{event.event_name}</div>
+          <p className="mb-2 text-gray-800 font-semibold">organized by <span className="font-bold text-blue-900">{event.org_name}</span></p>
+          <p className="mb-4 text-gray-800 font-semibold">from <span className="font-bold text-blue-900">{new Date(event.start_date).toLocaleDateString()}</span> to <span className="font-bold text-blue-900">{new Date(event.end_date).toLocaleDateString()}</span></p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-6">
+            <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
+              <h3 className="text-lg font-bold text-blue-900 mb-3">Participant Details</h3>
+              <div className="space-y-2 text-sm">
+                <div><span className="text-gray-700 font-semibold">Name:</span> <span className="text-gray-900">{participant.name}</span></div>
+                <div><span className="text-gray-700 font-semibold">Email:</span> <span className="text-gray-900">{participant.email}</span></div>
+                {participant.phone && <div><span className="text-gray-700 font-semibold">Phone:</span> <span className="text-gray-900">{participant.phone}</span></div>}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
+              <h3 className="text-lg font-bold text-blue-900 mb-3">Event Details</h3>
+              <div className="space-y-2 text-sm">
+                <div><span className="text-gray-700 font-semibold">Event:</span> <span className="text-gray-900">{event.event_name}</span></div>
+                <div><span className="text-gray-700 font-semibold">Type:</span> <span className="text-gray-900">{event.type_of_event}</span></div>
+                <div><span className="text-gray-700 font-semibold">Organization:</span> <span className="text-gray-900">{event.org_name}</span></div>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-between w-full text-xs text-blue-900 mt-8 font-semibold">
+            <div>Verification ID: <span className="font-mono">{participant.id.substring(0, 8)}</span></div>
+            <div>Issued on: {new Date().toLocaleDateString()}</div>
+          </div>
+          <div className="mt-6 text-center text-xs text-gray-500">© Yadharth {new Date().getFullYear()}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Modern Template ---
+function ModernTemplate({ participant, event, customer }: any) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white py-12 px-4 font-sans">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-12 border border-gray-200 relative">
+        {/* Black Seal */}
+        <div className="absolute -top-16 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
+          <div className="bg-black rounded-full p-4 shadow-lg border-4 border-white">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="26" fill="#000" stroke="#000" strokeWidth="6" /><path d="M20 32l7 7 13-15" stroke="#fff" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </div>
+        </div>
+        <div className="pt-16 pb-2 flex flex-col items-center">
+          <h1 className="text-5xl font-black tracking-tight mb-2 text-black">CERTIFICATE</h1>
+          <div className="border-b border-gray-300 w-24 mb-8"></div>
+          <div className="text-lg text-black mb-2 font-semibold">Awarded to</div>
+          <div className="text-2xl font-bold text-black mb-2">{participant.name}</div>
+          <div className="text-gray-800 text-sm mb-6">{participant.email}</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-6">
+            <div className="rounded-lg p-5 border border-gray-200">
+              <h3 className="text-lg font-bold text-black mb-3">Participant Details</h3>
+              <div className="space-y-2 text-sm">
+                <div><span className="text-gray-700 font-semibold">Name:</span> <span className="text-black">{participant.name}</span></div>
+                <div><span className="text-gray-700 font-semibold">Email:</span> <span className="text-black">{participant.email}</span></div>
+                {participant.phone && <div><span className="text-gray-700 font-semibold">Phone:</span> <span className="text-black">{participant.phone}</span></div>}
+              </div>
+            </div>
+            <div className="rounded-lg p-5 border border-gray-200">
+              <h3 className="text-lg font-bold text-black mb-3">Event Details</h3>
+              <div className="space-y-2 text-sm">
+                <div><span className="text-gray-700 font-semibold">Event:</span> <span className="text-black">{event.event_name}</span></div>
+                <div><span className="text-gray-700 font-semibold">Type:</span> <span className="text-black">{event.type_of_event}</span></div>
+                <div><span className="text-gray-700 font-semibold">Organization:</span> <span className="text-black">{event.org_name}</span></div>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-between w-full text-xs text-black mt-8 font-semibold">
+            <div>Verification ID: <span className="font-mono">{participant.id.substring(0, 8)}</span></div>
+            <div>Issued on: {new Date().toLocaleDateString()}</div>
+          </div>
+          <div className="mt-6 text-center text-xs text-gray-700">© Yadharth {new Date().getFullYear()}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Corporate Template ---
+function CorporateTemplate({ participant, event, customer }: any) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 to-white py-12 px-4 font-sans">
+      <div className="bg-white border-2 border-sky-600 rounded-2xl shadow-xl max-w-2xl w-full p-10 relative">
+        {/* Blue Seal */}
+        <div className="absolute -top-16 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
+          <div className="bg-sky-600 rounded-full p-4 shadow-lg border-4 border-white">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="26" fill="#0284c7" stroke="#0369a1" strokeWidth="6" /><path d="M20 32l7 7 13-15" stroke="#fff" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </div>
+        </div>
+        <div className="pt-16 pb-2 flex flex-col items-center">
+          <h1 className="text-3xl font-extrabold text-sky-800 mb-2">Certificate of Completion</h1>
+          <div className="border-b-2 border-sky-600 w-24 mb-6"></div>
+          <div className="text-lg mb-2 text-gray-900 font-semibold">This is to certify that</div>
+          <div className="text-2xl font-extrabold text-sky-800 mb-2">{participant.name}</div>
+          <div className="mb-2 text-gray-900 font-semibold">has successfully completed</div>
+          <div className="text-xl font-bold text-sky-800 mb-2">{event.event_name}</div>
+          <div className="mb-2 text-gray-900 font-semibold">organized by <span className="font-bold text-sky-800">{event.org_name}</span></div>
+          <p className="mb-4 text-gray-900 font-semibold">from <span className="font-bold text-sky-800">{new Date(event.start_date).toLocaleDateString()}</span> to <span className="font-bold text-sky-800">{new Date(event.end_date).toLocaleDateString()}</span></p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-6">
+            <div className="bg-sky-50 rounded-lg p-5 border border-sky-200">
+              <h3 className="text-lg font-bold text-sky-800 mb-3">Participant Details</h3>
+              <div className="space-y-2 text-sm">
+                <div><span className="text-gray-700 font-semibold">Name:</span> <span className="text-gray-900">{participant.name}</span></div>
+                <div><span className="text-gray-700 font-semibold">Email:</span> <span className="text-gray-900">{participant.email}</span></div>
+                {participant.phone && <div><span className="text-gray-700 font-semibold">Phone:</span> <span className="text-gray-900">{participant.phone}</span></div>}
+              </div>
+            </div>
+            <div className="bg-sky-50 rounded-lg p-5 border border-sky-200">
+              <h3 className="text-lg font-bold text-sky-800 mb-3">Event Details</h3>
+              <div className="space-y-2 text-sm">
+                <div><span className="text-gray-700 font-semibold">Event:</span> <span className="text-gray-900">{event.event_name}</span></div>
+                <div><span className="text-gray-700 font-semibold">Type:</span> <span className="text-gray-900">{event.type_of_event}</span></div>
+                <div><span className="text-gray-700 font-semibold">Organization:</span> <span className="text-gray-900">{event.org_name}</span></div>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-between w-full text-xs text-sky-800 mt-8 font-semibold">
+            <div>Verification ID: <span className="font-mono">{participant.id.substring(0, 8)}</span></div>
+            <div>Issued on: {new Date().toLocaleDateString()}</div>
+          </div>
+          <div className="mt-6 text-center text-xs text-gray-700">© Yadharth {new Date().getFullYear()}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Elegant Template ---
+function ElegantTemplate({ participant, event, customer }: any) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 to-rose-100 py-12 px-4 font-serif">
+      <div className="bg-[#f9f6f2] border border-yellow-300 rounded-3xl shadow-2xl max-w-2xl w-full p-12 relative" style={{ boxShadow: '0 8px 32px 0 rgba(60, 0, 0, 0.08)' }}>
+        {/* Gold Seal */}
+        <div className="absolute -top-16 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
+          <div className="bg-gradient-to-br from-yellow-400 to-rose-400 rounded-full p-4 shadow-lg border-4 border-white">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="26" fill="#fbbf24" stroke="#b91c1c" strokeWidth="6" /><path d="M20 32l7 7 13-15" stroke="#fff" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </div>
+        </div>
+        <div className="pt-16 pb-2 flex flex-col items-center">
+          <h1 className="text-4xl font-extrabold text-yellow-900 mb-2" style={{ fontFamily: 'cursive' }}>Certificate of Distinction</h1>
+          <div className="border-b-2 border-yellow-300 w-24 mb-6"></div>
+          <div className="text-lg mb-4 text-yellow-900 font-semibold">This is to honor</div>
+          <div className="text-2xl font-extrabold text-rose-800 mb-2" style={{ fontFamily: 'cursive' }}>{participant.name}</div>
+          <div className="mb-4 text-yellow-900 font-semibold">for outstanding achievement in</div>
+          <div className="text-xl font-bold text-yellow-900 mb-2">{event.event_name}</div>
+          <div className="mb-4 text-yellow-900 font-semibold">organized by <span className="font-bold text-rose-800">{event.org_name}</span></div>
+          <div className="mb-4 text-yellow-900 font-semibold">from <span className="font-bold text-rose-800">{new Date(event.start_date).toLocaleDateString()}</span> to <span className="font-bold text-rose-800">{new Date(event.end_date).toLocaleDateString()}</span></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-6">
+            <div className="bg-white/80 rounded-lg p-5 border border-yellow-200">
+              <h3 className="text-lg font-bold text-yellow-900 mb-3">Participant Details</h3>
+              <div className="space-y-2 text-sm">
+                <div><span className="text-yellow-900 font-semibold">Name:</span> <span className="text-yellow-900">{participant.name}</span></div>
+                <div><span className="text-yellow-900 font-semibold">Email:</span> <span className="text-yellow-900">{participant.email}</span></div>
+                {participant.phone && <div><span className="text-yellow-900 font-semibold">Phone:</span> <span className="text-yellow-900">{participant.phone}</span></div>}
+              </div>
+            </div>
+            <div className="bg-white/80 rounded-lg p-5 border border-yellow-200">
+              <h3 className="text-lg font-bold text-yellow-900 mb-3">Event Details</h3>
+              <div className="space-y-2 text-sm">
+                <div><span className="text-yellow-900 font-semibold">Event:</span> <span className="text-yellow-900">{event.event_name}</span></div>
+                <div><span className="text-yellow-900 font-semibold">Type:</span> <span className="text-yellow-900">{event.type_of_event}</span></div>
+                <div><span className="text-yellow-900 font-semibold">Organization:</span> <span className="text-yellow-900">{event.org_name}</span></div>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-between w-full text-xs text-yellow-900 mt-8 font-semibold">
+            <div>Verification ID: <span className="font-mono">{participant.id.substring(0, 8)}</span></div>
+            <div>Issued on: {new Date().toLocaleDateString()}</div>
+          </div>
+          <div className="mt-6 text-center text-xs text-yellow-900">© Yadharth {new Date().getFullYear()}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Fun Template ---
+function FunTemplate({ participant, event, customer }: any) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-200 via-yellow-100 to-teal-100 py-12 px-4 font-sans">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-10 relative overflow-hidden border-4 border-pink-300">
+        {/* Star Seal */}
+        <div className="absolute -top-16 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
+          <div className="bg-gradient-to-br from-pink-400 to-yellow-300 rounded-full p-4 shadow-lg border-4 border-white">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><polygon points="30,6 36,24 56,24 40,36 46,54 30,42 14,54 20,36 4,24 24,24" fill="#f472b6" stroke="#fbbf24" strokeWidth="4" /><path d="M20 32l7 7 13-15" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </div>
+          <span className="mt-2 text-pink-800 font-extrabold text-lg tracking-wide uppercase drop-shadow animate-bounce">You Did It!</span>
+        </div>
+        <div className="pt-16 pb-2 flex flex-col items-center">
+          <h1 className="text-3xl font-extrabold text-pink-800 mb-2">You Did It!</h1>
+          <div className="border-b-2 border-pink-300 w-24 mb-6"></div>
+          <div className="text-lg mb-2 text-pink-800 font-semibold">This is to celebrate</div>
+          <div className="text-2xl font-extrabold text-yellow-700 mb-2">{participant.name} 🎉</div>
+          <div className="mb-2 text-pink-800 font-semibold">for participating in</div>
+          <div className="text-xl font-bold text-teal-800 mb-2">{event.event_name}</div>
+          <div className="mb-2 text-pink-800 font-semibold">organized by <span className="font-bold text-teal-800">{event.org_name}</span></div>
+          <div className="mb-2 text-pink-800 font-semibold">from <span className="font-bold text-teal-800">{new Date(event.start_date).toLocaleDateString()}</span> to <span className="font-bold text-teal-800">{new Date(event.end_date).toLocaleDateString()}</span></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-6">
+            <div className="bg-yellow-50 rounded-lg p-5 border-2 border-pink-200">
+              <h3 className="text-lg font-bold text-pink-800 mb-3">Participant Details</h3>
+              <div className="space-y-2 text-sm">
+                <div><span className="text-pink-800 font-semibold">Name:</span> <span className="text-gray-900">{participant.name}</span></div>
+                <div><span className="text-pink-800 font-semibold">Email:</span> <span className="text-gray-900">{participant.email}</span></div>
+                {participant.phone && <div><span className="text-pink-800 font-semibold">Phone:</span> <span className="text-gray-900">{participant.phone}</span></div>}
+              </div>
+            </div>
+            <div className="bg-teal-50 rounded-lg p-5 border-2 border-yellow-200">
+              <h3 className="text-lg font-bold text-teal-800 mb-3">Event Details</h3>
+              <div className="space-y-2 text-sm">
+                <div><span className="text-teal-800 font-semibold">Event:</span> <span className="text-gray-900">{event.event_name}</span></div>
+                <div><span className="text-teal-800 font-semibold">Type:</span> <span className="text-gray-900">{event.type_of_event}</span></div>
+                <div><span className="text-teal-800 font-semibold">Organization:</span> <span className="text-gray-900">{event.org_name}</span></div>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-between w-full text-xs text-pink-800 mt-8 font-semibold">
+            <div>Verification ID: <span className="font-mono">{participant.id.substring(0, 8)}</span></div>
+            <div>Issued on: {new Date().toLocaleDateString()}</div>
+          </div>
+          <div className="mt-6 text-center text-xs text-pink-800">© Yadharth {new Date().getFullYear()}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function VerificationPage({ 
   params 
 }: { 
@@ -198,7 +442,9 @@ export default function VerificationPage({
     
     async function loadData() {
       try {
-        const data = await getParticipantData(resolvedParams.participantId? resolvedParams.participantId : '');
+        // Add null check before accessing participantId
+        const participantId = resolvedParams?.participantId || '';
+        const data = await getParticipantData(participantId);
         
         if ('error' in data) {
           console.error("Error in data:", data.error);
@@ -272,145 +518,19 @@ export default function VerificationPage({
   }
 
   const { participant, event, customer } = participantData;
-  const theme = themes[themeKey];
-  
-  return (
-    <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} flex items-center justify-center py-12 px-4 ${theme.fontFamily}`}>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        className={`w-full max-w-2xl ${theme.cardBg} border ${theme.borderColor} rounded-3xl shadow-2xl p-10 relative overflow-visible`}
-      >
-        {/* Verified Seal */}
-        <motion.div 
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-          className="absolute -top-20 left-1/2 -translate-x-1/2 z-10"
-        >
-          <div className="flex flex-col items-center">
-            <div className={`${theme.badgeBg} rounded-full p-3 shadow-lg border-4 border-white`}>
-              {/* SVG Seal */}
-              <svg width="100" height="100" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="40" cy="40" r="36" fill={theme.sealColor} stroke={theme.sealStrokeColor} strokeWidth="6" />
-                <path d="M25 42l10 10 20-22" stroke="#fff" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <span className={`mt-2 ${theme.accentColor} font-bold text-lg tracking-wide uppercase drop-shadow`}>Verified</span>
-          </div>
-        </motion.div>
 
-        {/* Card Content */}
-        <div className="pt-20 pb-2 flex flex-col items-center">
-          <motion.h1 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className={`${theme.titleClass} mb-2`}
-          >
-            {themeKey === "modern" ? "CERTIFICATE" : "Certificate of Completion"}
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className={`${theme.accentColor} text-center font-semibold mb-6`}
-          >
-            This certificate has been verified and is authentic.
-          </motion.p>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className={`w-full ${theme.detailsBg} rounded-xl p-6 shadow-inner mb-6`}
-          >
-            <div className={`text-lg ${theme.primaryColor} leading-relaxed text-center`}>
-              <span className="font-bold">{participant.name}</span> successfully completed{' '}
-              <span className={`font-bold ${theme.highlightColor}`}>{event.event_name}</span> organised by{' '}
-              <span className="font-bold">{event.org_name}</span> from{' '}
-              <span className={`font-bold ${theme.highlightColor}`}>
-                {new Date(event.start_date).toLocaleDateString()}
-              </span> to{' '}
-              <span className={`font-bold ${theme.highlightColor}`}>
-                {new Date(event.end_date).toLocaleDateString()}
-              </span>.
-            </div>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7 }}
-              className={`${theme.cardBg} border ${theme.borderColor} rounded-lg p-5 shadow-sm`}
-            >
-              <h3 className={`text-lg font-semibold ${theme.primaryColor} mb-3`}>Participant Details</h3>
-              <div className="space-y-2 text-sm">
-                <div><span className="text-gray-500">Name:</span> <span className={theme.primaryColor}>{participant.name}</span></div>
-                <div><span className="text-gray-500">Email:</span> <span className={theme.primaryColor}>{participant.email}</span></div>
-                {participant.phone && (
-                  <div><span className="text-gray-500">Phone:</span> <span className={theme.primaryColor}>{participant.phone}</span></div>
-                )}
-              </div>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
-              className={`${theme.cardBg} border ${theme.borderColor} rounded-lg p-5 shadow-sm`}
-            >
-              <h3 className={`text-lg font-semibold ${theme.primaryColor} mb-3`}>Event Details</h3>
-              <div className="space-y-2 text-sm">
-                <div><span className="text-gray-500">Event:</span> <span className={theme.primaryColor}>{event.event_name}</span></div>
-                <div><span className="text-gray-500">Type:</span> <span className={theme.primaryColor}>{event.type_of_event}</span></div>
-                <div><span className="text-gray-500">Organization:</span> <span className={theme.primaryColor}>{event.org_name}</span></div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Celebratory message */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="flex flex-col items-center mt-6"
-          >
-            <span className="text-gray-500 text-xs mt-1">This certificate is valid and recognized.</span>
-          </motion.div>
-        </div>
-
-        {/* Additional verification info for certain themes */}
-        {themeKey === "corporate" && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.1 }}
-            className="mt-6 border-t border-gray-200 pt-4"
-          >
-            <div className="flex justify-between items-center">
-              <div className="text-xs text-gray-500">
-                Verification ID: <span className="font-mono">{participant.id.substring(0, 8)}</span>
-              </div>
-              <div className="text-xs text-gray-500">
-                Issued on: {new Date().toLocaleDateString()}
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="text-center text-xs text-gray-400 mt-8"
-        >
-          © Yadharth {new Date().getFullYear()}
-        </motion.div>
-      </motion.div>
-    </div>
-  );
+  switch (event.theme_option) {
+    case "classic":
+      return <ClassicTemplate participant={participant} event={event} customer={customer} />;
+    case "modern":
+      return <ModernTemplate participant={participant} event={event} customer={customer} />;
+    case "corporate":
+      return <CorporateTemplate participant={participant} event={event} customer={customer} />;
+    case "elegant":
+      return <ElegantTemplate participant={participant} event={event} customer={customer} />;
+    case "fun":
+      return <FunTemplate participant={participant} event={event} customer={customer} />;
+    default:
+      return <ClassicTemplate participant={participant} event={event} customer={customer} />;
+  }
 }

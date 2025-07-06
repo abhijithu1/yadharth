@@ -47,10 +47,10 @@ export async function POST(req: NextRequest) {
     }
     
     // Validate theme option
-    const validThemes = ["classic", "modern", "corporate"];
+    const validThemes = ["classic", "modern", "corporate", "elegant", "fun"];
     if (!validThemes.includes(theme_option)) {
       return NextResponse.json({ 
-        error: "Invalid theme option. Must be one of: classic, modern, corporate" 
+        error: "Invalid theme option. Must be one of: classic, modern, corporate, elegant, fun" 
       }, { status: 400 });
     }
     
@@ -196,10 +196,10 @@ export async function PATCH(req: NextRequest) {
     if (type_of_event !== undefined) updateData.type_of_event = type_of_event;
     if (theme_option !== undefined) {
       // Validate theme option if provided
-      const validThemes = ["classic", "modern", "corporate"];
+      const validThemes = ["classic", "modern", "corporate", "elegant", "fun"];
       if (!validThemes.includes(theme_option)) {
         return NextResponse.json({ 
-          error: "Invalid theme option. Must be one of: classic, modern, corporate" 
+          error: "Invalid theme option. Must be one of: classic, modern, corporate, elegant, fun" 
         }, { status: 400 });
       }
       updateData.theme_option = theme_option;

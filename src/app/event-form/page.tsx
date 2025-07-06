@@ -34,24 +34,38 @@ const itemVariants: Variants = {
 const themeOptions = [
   {
     id: "classic",
-    name: "Classic",
-    description: "A timeless design with elegant typography and borders",
+    name: "Classic Certificate",
+    description: "Traditional border, serif fonts, centered text.",
     image: "/themes/classic-theme.jpg",
-    previewUrl: ""
+    previewUrl: "/themes/classic-theme.jpg"
   },
   {
     id: "modern",
-    name: "Modern",
-    description: "Clean, minimalist design with bold typography",
+    name: "Modern Minimal",
+    description: "Clean, lots of whitespace, bold headings, left-aligned.",
     image: "/themes/modern-theme.jpg",
-    previewUrl: ""
+    previewUrl: "/themes/modern-theme.jpg"
   },
   {
     id: "corporate",
-    name: "Corporate",
-    description: "Professional design with company branding focus",
+    name: "Corporate Card",
+    description: "Professional, card-like, company branding area.",
     image: "/themes/corporate-theme.jpg",
-    previewUrl: ""
+    previewUrl: "/themes/corporate-theme.jpg"
+  },
+  {
+    id: "elegant",
+    name: "Elegant Ribbon",
+    description: "Decorative ribbon, script font, gold accents.",
+    image: "/themes/elegant-theme.jpg",
+    previewUrl: "/themes/elegant-theme.jpg"
+  },
+  {
+    id: "fun",
+    name: "Fun Playful",
+    description: "Rounded corners, playful font, colorful shapes.",
+    image: "/themes/fun-theme.jpg",
+    previewUrl: "/themes/fun-theme.jpg"
   }
 ];
 
