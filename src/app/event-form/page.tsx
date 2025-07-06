@@ -69,8 +69,9 @@ export default function EventFormPage() {
     setSuccess(false);
 
     try {
-      // Get the current user's email
+      // Get the current user's email and name
       const email = user?.primaryEmailAddress?.emailAddress || user?.emailAddresses[0]?.emailAddress || "";
+      const customer_name = user?.fullName || user?.firstName || "New User";
       if (!email) {
         setError('No email found for current user.');
         setLoading(false);
@@ -81,7 +82,7 @@ export default function EventFormPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...formData, email }),
+        body: JSON.stringify({ ...formData, email, customer_name }),
       });
 
       const data = await response.json();

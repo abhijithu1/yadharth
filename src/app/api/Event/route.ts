@@ -7,6 +7,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { 
       email,  // Email to find customer ID
+      customer_name,
       event_name, 
       org_name, 
       start_date, 
@@ -46,14 +47,27 @@ export async function POST(req: NextRequest) {
       .eq('email', email)
       .single();
     
-    if (customerError || !customer) {
-      console.error("Error finding customer:", customerError);
-      return NextResponse.json({ 
-        error: "No customer found with this email. Please register first." 
-      }, { status: 404 });
-    }
+    let customer_id: string;
     
-    const customer_id = customer.id;
+    if (customerError || !customer) {
+      // If not found, create a new customer
+      const { data: newCustomer, error: createCustomerError } = await supabase
+        .from('customers')
+        .insert([{ email, customer_name: customer_name || "New User" }])
+        .select('id')
+        .single();
+
+      if (createCustomerError || !newCustomer) {
+        console.error("Error creating customer:", createCustomerError);
+        return NextResponse.json({ 
+          error: "Failed to create customer record." 
+        }, { status: 500 });
+      }
+
+      customer_id = newCustomer.id;
+    } else {
+      customer_id = customer.id;
+    }
     
     // Create the event
     const { data: newEvent, error: eventError } = await supabase
