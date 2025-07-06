@@ -21,27 +21,43 @@ interface Event {
 const themeOptions = [
   {
     id: "classic",
-    name: "Classic",
-    description: "A timeless design with elegant typography and borders",
+    name: "Classic Certificate",
+    description: "Traditional border, serif fonts, centered text.",
     color: "bg-blue-500",
     gradient: "bg-gradient-to-br from-blue-400 to-blue-600",
     icon: "✦"
   },
   {
     id: "modern",
-    name: "Modern",
-    description: "Clean, minimalist design with bold typography",
+    name: "Modern Minimal",
+    description: "Clean, lots of whitespace, bold headings, left-aligned.",
     color: "bg-black",
     gradient: "bg-gradient-to-br from-gray-700 to-black",
     icon: "◼"
   },
   {
     id: "corporate",
-    name: "Corporate",
-    description: "Professional design with company branding focus",
+    name: "Corporate Card",
+    description: "Professional, card-like, company branding area.",
     color: "bg-sky-600",
     gradient: "bg-gradient-to-br from-sky-400 to-sky-600",
     icon: "◆"
+  },
+  {
+    id: "elegant",
+    name: "Elegant Ribbon",
+    description: "Decorative ribbon, script font, gold accents.",
+    color: "bg-pink-400",
+    gradient: "bg-gradient-to-br from-pink-400 to-yellow-400",
+    icon: "🎀"
+  },
+  {
+    id: "fun",
+    name: "Fun Playful",
+    description: "Rounded corners, playful font, colorful shapes.",
+    color: "bg-green-400",
+    gradient: "bg-gradient-to-br from-green-300 to-blue-300",
+    icon: "🎉"
   }
 ];
 
