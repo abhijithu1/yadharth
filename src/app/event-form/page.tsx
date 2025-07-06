@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useAuth, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { motion, Variants } from "framer-motion"; // Added Variants type import
+import { motion, Variants } from "framer-motion";
+import Image from "next/image";
 
 // Animation variants with proper type annotation
 const containerVariants: Variants = {
@@ -29,6 +30,31 @@ const itemVariants: Variants = {
   }
 };
 
+// Theme options
+const themeOptions = [
+  {
+    id: "classic",
+    name: "Classic",
+    description: "A timeless design with elegant typography and borders",
+    image: "/themes/classic-theme.jpg",
+    previewUrl: ""
+  },
+  {
+    id: "modern",
+    name: "Modern",
+    description: "Clean, minimalist design with bold typography",
+    image: "/themes/modern-theme.jpg",
+    previewUrl: ""
+  },
+  {
+    id: "corporate",
+    name: "Corporate",
+    description: "Professional design with company branding focus",
+    image: "/themes/corporate-theme.jpg",
+    previewUrl: ""
+  }
+];
+
 export default function EventFormPage() {
   const { userId, sessionId, getToken } = useAuth();
   const { user, isLoaded } = useUser();
@@ -36,6 +62,8 @@ export default function EventFormPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState<string>("");
+  const [showThemePreview, setShowThemePreview] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
     event_name: '',
@@ -43,6 +71,7 @@ export default function EventFormPage() {
     start_date: '',
     end_date: '',
     type_of_event: '',
+    theme_option: '',
   });
 
   const isFormValid =
@@ -50,6 +79,7 @@ export default function EventFormPage() {
     formData.event_name &&
     formData.start_date &&
     formData.end_date &&
+    formData.theme_option &&
     (!formData.start_date || !formData.end_date || formData.end_date >= formData.start_date);
 
   const isEndDateInvalid =
@@ -60,6 +90,11 @@ export default function EventFormPage() {
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleThemeSelect = (themeId: string) => {
+    setSelectedTheme(themeId);
+    setFormData({ ...formData, theme_option: themeId });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -193,7 +228,7 @@ export default function EventFormPage() {
                   name="type_of_event"
                   value={formData.type_of_event}
                   onChange={handleChange}
-                  className="w-full bg-white  text-black  border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors"
+                  className="w-full bg-white text-black border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors"
                   required
                 >
                   <option value="">Select Type</option>
@@ -211,7 +246,7 @@ export default function EventFormPage() {
                   name="event_name"
                   value={formData.event_name}
                   onChange={handleChange}
-                  className="w-full    bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors  text-black "
+                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors text-black"
                   placeholder="Enter event name"
                   required
                 />
@@ -224,7 +259,7 @@ export default function EventFormPage() {
                   name="org_name"
                   value={formData.org_name}
                   onChange={handleChange}
-                  className="w-full  text-black  bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors"
+                  className="w-full text-black bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors"
                   placeholder="Enter organization name"
                   required
                   autoComplete="off"
@@ -238,7 +273,7 @@ export default function EventFormPage() {
                   name="start_date"
                   value={formData.start_date}
                   onChange={handleChange}
-                  className="w-full  text-black  bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors"
+                  className="w-full text-black bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors"
                   required
                 />
               </motion.div>
@@ -250,12 +285,73 @@ export default function EventFormPage() {
                   name="end_date"
                   value={formData.end_date}
                   onChange={handleChange}
-                  className="w-full  text-black  bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors"
+                  className="w-full text-black bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-colors"
                   required
                   min={formData.start_date || undefined}
                 />
                 {isEndDateInvalid && (
                   <p className="text-red-600 text-sm mt-1">⚠ End date cannot be before start date.</p>
+                )}
+              </motion.div>
+              
+              {/* Theme Selection Section */}
+              <motion.div variants={itemVariants} className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-3">Certificate Theme</label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {themeOptions.map((theme) => (
+                    <motion.div 
+                      key={theme.id}
+                      whileHover={{ y: -4 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`
+                        border-2 rounded-lg overflow-hidden cursor-pointer transition-all
+                        ${selectedTheme === theme.id ? 'border-black ring-2 ring-black' : 'border-gray-200'}
+                      `}
+                      onClick={() => handleThemeSelect(theme.id)}
+                    >
+                      <div className="relative h-40 w-full overflow-hidden bg-gray-100">
+                        <Image 
+                          src={theme.previewUrl}
+                          alt={`${theme.name} theme preview`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                        <div 
+                          className="absolute inset-0 hover:bg-black/10 transition-colors flex items-center justify-center"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowThemePreview(theme.id);
+                          }}
+                        >
+                          <div className="hidden group-hover:flex bg-black/70 text-white py-1 px-3 rounded-full text-xs font-medium">
+                            Preview
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-3 bg-white">
+                        <div className="flex justify-between items-center">
+                          <h3 className="font-medium text-black">{theme.name}</h3>
+                          {selectedTheme === theme.id && (
+                            <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" clipRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                            </svg>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">{theme.description}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+                {/* Hidden input to store the selected theme value */}
+                <input 
+                  type="hidden" 
+                  name="theme_option" 
+                  value={formData.theme_option} 
+                  required
+                />
+                {!formData.theme_option && (
+                  <p className="text-amber-600 text-sm mt-2">Please select a certificate theme</p>
                 )}
               </motion.div>
             </div>
@@ -306,6 +402,71 @@ export default function EventFormPage() {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Theme Preview Modal */}
+      {showThemePreview && (
+        <motion.div 
+          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          onClick={() => setShowThemePreview(null)}
+        >
+          <motion.div 
+            className="bg-white rounded-xl overflow-hidden max-w-3xl w-full max-h-[80vh]"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="border-b border-gray-200 p-4 flex justify-between items-center">
+              <h3 className="font-bold text-lg">
+                {themeOptions.find(t => t.id === showThemePreview)?.name} Theme Preview
+              </h3>
+              <button 
+                onClick={() => setShowThemePreview(null)}
+                className="p-2 hover:bg-gray-100 rounded-full"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-6 overflow-auto max-h-[60vh]">
+              <div className="aspect-[8.5/11] w-full relative bg-gray-100 rounded-md overflow-hidden">
+                <Image
+                  src={themeOptions.find(t => t.id === showThemePreview)?.previewUrl || ""}
+                  alt={`${themeOptions.find(t => t.id === showThemePreview)?.name} theme preview`}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 700px"
+                />
+              </div>
+              <div className="mt-4">
+                <h4 className="font-medium mb-2">Description:</h4>
+                <p className="text-gray-600">
+                  {themeOptions.find(t => t.id === showThemePreview)?.description}
+                </p>
+              </div>
+            </div>
+            <div className="border-t border-gray-200 p-4 flex justify-end space-x-4">
+              <button
+                onClick={() => setShowThemePreview(null)} 
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  handleThemeSelect(showThemePreview);
+                  setShowThemePreview(null);
+                }}
+                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800"
+              >
+                Select This Theme
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.main>
   );
 }

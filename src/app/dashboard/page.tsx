@@ -5,6 +5,7 @@ import { useAuth, useUser, UserButton } from "@clerk/nextjs";
 import { supabase } from "@/utils/supabaseClient";
 import { motion, Variants } from "framer-motion"; // Import Variants type
 import { Dialog } from '@headlessui/react';
+import Image from "next/image";
 
 interface Event {
   id: string;
@@ -13,7 +14,36 @@ interface Event {
   start_date: string;
   end_date: string;
   type_of_event: string;
+  theme_option: string;
 }
+
+// Theme options
+const themeOptions = [
+  {
+    id: "classic",
+    name: "Classic",
+    description: "A timeless design with elegant typography and borders",
+    color: "bg-blue-500",
+    gradient: "bg-gradient-to-br from-blue-400 to-blue-600",
+    icon: "✦"
+  },
+  {
+    id: "modern",
+    name: "Modern",
+    description: "Clean, minimalist design with bold typography",
+    color: "bg-black",
+    gradient: "bg-gradient-to-br from-gray-700 to-black",
+    icon: "◼"
+  },
+  {
+    id: "corporate",
+    name: "Corporate",
+    description: "Professional design with company branding focus",
+    color: "bg-sky-600",
+    gradient: "bg-gradient-to-br from-sky-400 to-sky-600",
+    icon: "◆"
+  }
+];
 
 // Animation variants with proper typing
 const containerVariants: Variants = {
@@ -102,12 +132,19 @@ export default function DashboardPage() {
 
   const openEditModal = (event: Event) => {
     setEventToEdit(event);
-    setEditForm(event);
+    setEditForm({
+      ...event,
+      theme_option: event.theme_option || 'classic' // Default to classic if not set
+    });
     setEditModalOpen(true);
   };
 
   const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const handleThemeSelect = (themeId: string) => {
+    setEditForm({ ...editForm, theme_option: themeId });
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
@@ -132,6 +169,17 @@ export default function DashboardPage() {
     } finally {
       setEditLoading(false);
     }
+  };
+
+  // Helper function to get theme color
+  const getThemeColor = (themeOption: string | undefined) => {
+    const theme = themeOptions.find(t => t.id === themeOption);
+    return theme ? theme.color : 'bg-gray-300';
+  };
+
+  // Helper function to get theme info
+  const getThemeInfo = (themeId: string | undefined) => {
+    return themeOptions.find(t => t.id === themeId) || themeOptions[0];
   };
 
   return (
@@ -240,9 +288,15 @@ export default function DashboardPage() {
                   >
                     <div className="flex justify-between items-start">
                       <h3 className="font-medium text-black">{event.event_name}</h3>
-                      <span className="px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-700 font-medium">
-                        {event.type_of_event}
-                      </span>
+                      <div className="flex items-center space-x-2">
+                        <div 
+                          className={`w-3 h-3 rounded-full ${getThemeColor(event.theme_option)}`} 
+                          title={`Theme: ${event.theme_option || 'Classic'}`}
+                        ></div>
+                        <span className="px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-700 font-medium">
+                          {event.type_of_event}
+                        </span>
+                      </div>
                     </div>
                     <p className="text-gray-600 text-sm mt-1">{event.org_name}</p>
                     <div className="flex justify-between items-center mt-3 text-sm">
@@ -345,7 +399,7 @@ export default function DashboardPage() {
         {/* Edit Modal */}
         <Dialog open={editModalOpen} onClose={() => setEditModalOpen(false)} className="fixed z-50 inset-0 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4">
-            <div className="fixed inset-0 bg-black opacity-30" aria-hidden="true" />
+            <div className="fixed inset-0 bg-black opacity-30" aria-hidden="true" onClick={() => setEditModalOpen(false)} />
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -416,11 +470,45 @@ export default function DashboardPage() {
                     <option value="Hackathon">Hackathon</option>
                   </select>
                 </div>
-                <div className="flex justify-end gap-2 mt-4">
-                  <button type="button" className="px-4 py-2 rounded bg-gray-200 text-black" onClick={() => setEditModalOpen(false)}>
+                
+                {/* Simplified Theme Selection Section */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Certificate Theme</label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {themeOptions.map((theme) => (
+                      <div 
+                        key={theme.id}
+                        onClick={() => handleThemeSelect(theme.id)}
+                        className={`cursor-pointer border rounded-md transition-all 
+                          ${editForm.theme_option === theme.id 
+                            ? 'border-black ring-2 ring-black' 
+                            : 'border-gray-200 hover:border-gray-300'}`}
+                      >
+                        <div className={`${theme.gradient} rounded-t-md p-4 flex items-center justify-center`}>
+                          <span className="text-2xl text-white">{theme.icon}</span>
+                        </div>
+                        <div className="p-3">
+                          <p className="text-sm font-medium text-center">{theme.name}</p>
+                          <p className="text-xs text-gray-500 text-center mt-1 line-clamp-2">{theme.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2 mt-6">
+                  <button 
+                    type="button" 
+                    className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-black transition-colors" 
+                    onClick={() => setEditModalOpen(false)}
+                  >
                     Cancel
                   </button>
-                  <button type="submit" className="px-4 py-2 rounded bg-black text-white" disabled={editLoading}>
+                  <button 
+                    type="submit" 
+                    className="px-4 py-2 rounded bg-black hover:bg-gray-900 text-white transition-colors" 
+                    disabled={editLoading}
+                  >
                     {editLoading ? 'Saving...' : 'Save Changes'}
                   </button>
                 </div>
