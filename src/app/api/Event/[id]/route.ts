@@ -57,7 +57,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const validThemes = ["classic", "modern", "corporate","elegant","fun"];
     if (!validThemes.includes(updateData.theme_option)) {
       return NextResponse.json({ 
-        error: "Invalid theme_option. Must be one of: classic, modern, corporate" 
+        error: "Invalid theme_option. Must be one of: classic, modern, corporate, elegant, fun" 
       }, { status: 400 });
     }
   }

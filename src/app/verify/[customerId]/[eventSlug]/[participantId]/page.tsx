@@ -398,7 +398,7 @@ function FunTemplate({ participant, event, customer }: any) {
 export default function VerificationPage({ 
   params 
 }: { 
-  params: Promise<{ customerId: string; eventSlug: string; participantId: string }> | { customerId: string; eventSlug: string; participantId: string }
+  params: Promise<{ customerId: string; eventSlug: string; participantId: string }>
 }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -418,12 +418,8 @@ export default function VerificationPage({
   useEffect(() => {
     async function resolveParams() {
       try {
-        if (params instanceof Promise) {
-          const unwrappedParams = await params;
-          setResolvedParams(unwrappedParams);
-        } else {
-          setResolvedParams(params);
-        }
+        const unwrappedParams = await params;
+        setResolvedParams(unwrappedParams);
       } catch (err) {
         console.error("Failed to resolve params:", err);
         setError("Invalid certificate URL");
