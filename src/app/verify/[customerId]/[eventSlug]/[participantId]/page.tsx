@@ -8,6 +8,15 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Helper function to format dates in DD/MM/YY format
+function formatDate(dateString: string | Date): string {
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear().toString().slice(-2);
+  return `${day}/${month}/${year}`;
+}
+
 interface Participant {
   id: string;
   name: string;
@@ -171,7 +180,7 @@ function ClassicTemplate({ participant, event, customer }: any) {
           <p className="mb-2 text-gray-800 font-semibold">has successfully completed</p>
           <div className="text-xl font-bold text-blue-900 mb-2">{event.event_name}</div>
           <p className="mb-2 text-gray-800 font-semibold">organized by <span className="font-bold text-blue-900">{event.org_name}</span></p>
-          <p className="mb-4 text-gray-800 font-semibold">from <span className="font-bold text-blue-900">{new Date(event.start_date).toLocaleDateString()}</span> to <span className="font-bold text-blue-900">{new Date(event.end_date).toLocaleDateString()}</span></p>
+          <p className="mb-4 text-gray-800 font-semibold">from <span className="font-bold text-blue-900">{formatDate(event.start_date)}</span> to <span className="font-bold text-blue-900">{formatDate(event.end_date)}</span></p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-6">
             <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
               <h3 className="text-lg font-bold text-blue-900 mb-3">Participant Details</h3>
@@ -192,7 +201,7 @@ function ClassicTemplate({ participant, event, customer }: any) {
           </div>
           <div className="flex justify-between w-full text-xs text-blue-900 mt-8 font-semibold">
             <div>Verification ID: <span className="font-mono">{participant.id.substring(0, 8)}</span></div>
-            <div>Issued on: {new Date().toLocaleDateString()}</div>
+            <div>Issued on: {formatDate(new Date())}</div>
           </div>
           <div className="mt-6 text-center text-xs text-gray-500">© Yadharth {new Date().getFullYear()}</div>
         </div>
@@ -238,7 +247,7 @@ function ModernTemplate({ participant, event, customer }: any) {
           </div>
           <div className="flex justify-between w-full text-xs text-black mt-8 font-semibold">
             <div>Verification ID: <span className="font-mono">{participant.id.substring(0, 8)}</span></div>
-            <div>Issued on: {new Date().toLocaleDateString()}</div>
+            <div>Issued on: {formatDate(new Date())}</div>
           </div>
           <div className="mt-6 text-center text-xs text-gray-700">© Yadharth {new Date().getFullYear()}</div>
         </div>
@@ -266,7 +275,7 @@ function CorporateTemplate({ participant, event, customer }: any) {
           <div className="mb-2 text-gray-900 font-semibold">has successfully completed</div>
           <div className="text-xl font-bold text-sky-800 mb-2">{event.event_name}</div>
           <div className="mb-2 text-gray-900 font-semibold">organized by <span className="font-bold text-sky-800">{event.org_name}</span></div>
-          <p className="mb-4 text-gray-900 font-semibold">from <span className="font-bold text-sky-800">{new Date(event.start_date).toLocaleDateString()}</span> to <span className="font-bold text-sky-800">{new Date(event.end_date).toLocaleDateString()}</span></p>
+          <p className="mb-4 text-gray-900 font-semibold">from <span className="font-bold text-sky-800">{formatDate(event.start_date)}</span> to <span className="font-bold text-sky-800">{formatDate(event.end_date)}</span></p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-6">
             <div className="bg-sky-50 rounded-lg p-5 border border-sky-200">
               <h3 className="text-lg font-bold text-sky-800 mb-3">Participant Details</h3>
@@ -287,7 +296,7 @@ function CorporateTemplate({ participant, event, customer }: any) {
           </div>
           <div className="flex justify-between w-full text-xs text-sky-800 mt-8 font-semibold">
             <div>Verification ID: <span className="font-mono">{participant.id.substring(0, 8)}</span></div>
-            <div>Issued on: {new Date().toLocaleDateString()}</div>
+            <div>Issued on: {formatDate(new Date())}</div>
           </div>
           <div className="mt-6 text-center text-xs text-gray-700">© Yadharth {new Date().getFullYear()}</div>
         </div>
@@ -315,7 +324,7 @@ function ElegantTemplate({ participant, event, customer }: any) {
           <div className="mb-4 text-yellow-900 font-semibold">for outstanding achievement in</div>
           <div className="text-xl font-bold text-yellow-900 mb-2">{event.event_name}</div>
           <div className="mb-4 text-yellow-900 font-semibold">organized by <span className="font-bold text-rose-800">{event.org_name}</span></div>
-          <div className="mb-4 text-yellow-900 font-semibold">from <span className="font-bold text-rose-800">{new Date(event.start_date).toLocaleDateString()}</span> to <span className="font-bold text-rose-800">{new Date(event.end_date).toLocaleDateString()}</span></div>
+          <div className="mb-4 text-yellow-900 font-semibold">from <span className="font-bold text-rose-800">{formatDate(event.start_date)}</span> to <span className="font-bold text-rose-800">{formatDate(event.end_date)}</span></div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-6">
             <div className="bg-white/80 rounded-lg p-5 border border-yellow-200">
               <h3 className="text-lg font-bold text-yellow-900 mb-3">Participant Details</h3>
@@ -336,7 +345,7 @@ function ElegantTemplate({ participant, event, customer }: any) {
           </div>
           <div className="flex justify-between w-full text-xs text-yellow-900 mt-8 font-semibold">
             <div>Verification ID: <span className="font-mono">{participant.id.substring(0, 8)}</span></div>
-            <div>Issued on: {new Date().toLocaleDateString()}</div>
+            <div>Issued on: {formatDate(new Date())}</div>
           </div>
           <div className="mt-6 text-center text-xs text-yellow-900">© Yadharth {new Date().getFullYear()}</div>
         </div>
@@ -365,7 +374,7 @@ function FunTemplate({ participant, event, customer }: any) {
           <div className="mb-2 text-pink-800 font-semibold">for participating in</div>
           <div className="text-xl font-bold text-teal-800 mb-2">{event.event_name}</div>
           <div className="mb-2 text-pink-800 font-semibold">organized by <span className="font-bold text-teal-800">{event.org_name}</span></div>
-          <div className="mb-2 text-pink-800 font-semibold">from <span className="font-bold text-teal-800">{new Date(event.start_date).toLocaleDateString()}</span> to <span className="font-bold text-teal-800">{new Date(event.end_date).toLocaleDateString()}</span></div>
+          <div className="mb-2 text-pink-800 font-semibold">from <span className="font-bold text-teal-800">{formatDate(event.start_date)}</span> to <span className="font-bold text-teal-800">{formatDate(event.end_date)}</span></div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-6">
             <div className="bg-yellow-50 rounded-lg p-5 border-2 border-pink-200">
               <h3 className="text-lg font-bold text-pink-800 mb-3">Participant Details</h3>
@@ -386,7 +395,7 @@ function FunTemplate({ participant, event, customer }: any) {
           </div>
           <div className="flex justify-between w-full text-xs text-pink-800 mt-8 font-semibold">
             <div>Verification ID: <span className="font-mono">{participant.id.substring(0, 8)}</span></div>
-            <div>Issued on: {new Date().toLocaleDateString()}</div>
+            <div>Issued on: {formatDate(new Date())}</div>
           </div>
           <div className="mt-6 text-center text-xs text-pink-800">© Yadharth {new Date().getFullYear()}</div>
         </div>
