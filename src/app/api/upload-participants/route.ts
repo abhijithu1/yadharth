@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
 
     // 6. Generate verification URLs
     // Use environment variable or fallback to localhost
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yadharth.vercel.app/";
     const participantUrls = [];
     
     // Prepare data for updating the database
